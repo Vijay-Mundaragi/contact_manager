@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Contact
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 #===== Function based view ===========
 # def home(request):
@@ -22,3 +22,9 @@ class HomePageView(ListView):
     template_name = 'index.html'
     model = Contact
     context_object_name = 'contacts'
+
+
+class ContactDetailView(DetailView):
+    template_name = 'detail.html'
+    model = Contact
+    context_object_name = 'contact'
