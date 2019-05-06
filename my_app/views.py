@@ -1,7 +1,9 @@
 from django.shortcuts import render
-
-# Create your views here.
+from .models import Contact
 
 
 def home(request):
-    return render(request, 'index.html')
+    context = {
+        'contacts': Contact.objects.all(),
+    }
+    return render(request, 'index.html', context)
