@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'my_app.apps.MyAppConfig',
     'crispy_forms',
     'django.contrib.admin',
+    'import_export',
 ]
 
 MIDDLEWARE = [
