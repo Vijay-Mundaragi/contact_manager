@@ -15,17 +15,27 @@ class HomePageView(LoginRequiredMixin, ListView):
     model = Contact
     context_object_name = 'contacts'
 
+    def get_queryset(self):
+        contacts = super().get_queryset()
+        return contacts.filter(manager=self.request.user)
+
 
 class ContactDetailView(LoginRequiredMixin, DetailView):
     template_name = 'detail.html'
     model = Contact
     context_object_name = 'contact'
 
+
 class ContactCreateView(LoginRequiredMixin, CreateView):
     model = Contact
     template_name = 'create.html'
     fields = ['name', 'email', 'phone', 'info', 'gender', 'image']
-    success_url = "/"
+    
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.manager = self.request.user
+        instance.save()
+        return redirect('home')
     
 
 class ContactUpdateView(LoginRequiredMixin, UpdateView):
@@ -53,7 +63,6 @@ class SignUpView(CreateView):
 #======== Function Based View ======
 @login_required
 def search(request):
-    print(request)
     if request.GET:
         search_term = request.GET['search_term']
         search_results = Contact.objects.filter(
@@ -64,7 +73,7 @@ def search(request):
         )
         context = {
             'search_term': search_term,
-            'contacts': search_results,
+            'contacts': search_results.filter(manager=request.user)
         }
         return render(request, 'search.html', context)
     else:
